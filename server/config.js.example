@@ -1,0 +1,7 @@
+// config.js.example
+// Rename to config.js
+var config = {
+    "mongodb": 'mongodb://zina:password1@ds249583.mlab.com:49583/fullstack_app'
+}
+
+modules.exports = config;
