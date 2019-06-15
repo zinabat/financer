@@ -1,34 +1,22 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
+
+import NavBar from './components/common/NavBar';
+import UserAuthForm from './components/UserAuthForm';
+
 
 class App extends Component {
-  state = {
-    data: [],
-    id: 0,
-    message: null,
-  };
-
-  componentDidMount() {
-    this.getDataFromDb();
-  }
-
-  getDataFromDb = () => {
-    axios.get('http://localhost:3001/user/login')
-      .then(res => {
-        const data = res.data;
-        this.setState({data: data});
-    });
-  }
-
   render() {
-    const { data } = this.state;
-
-    
-    
     return (
-      <div>Hallo Wurld<br/>{this.state.data}</div>
+      <Router>
+        <NavBar mb={0.5}/>
+        <Container maxWidth="sm">
+        
+          <UserAuthForm />
+        
+        </Container>
+      </Router>
     );
   }
 }
