@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useInput, useSubmit } from '../hooks/form';
 import isEmail from 'validator/lib/isEmail';
 import isLength from 'validator/lib/isLength';
+import equals from 'validator/lib/equals';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -33,6 +34,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function LoginForm(props) {
+
+}
+
+function RegisterForm(props) {
+  
+}
+
 export default function UserAuthForm(props) {
 
   const classes = useStyles();
@@ -43,30 +52,27 @@ export default function UserAuthForm(props) {
     return isEmail(value);
   });
 
+  const min = 8;
+  const max = 64;
   const password = useInput("Password", "", function(value) {
-    return true;
-  });
+    
+    return isLength(value, { min: min, max: max });
+  }, {helperText: "Must be between "+min+" and "+max+" characters"});
 
-  function handleSuccess(data) {
+  function handleLogin(data) {
     setData(data);
     // send to server
     // get server response
   }
 
-  const submit = useSubmit([email, password], handleSuccess);
+  const login = useSubmit([email, password], handleLogin);
 
   return (
     <Paper className={classes.paper}>
-    <form className={classes.form} {...submit.props}>
+    <form className={classes.form} >
       <Typography variant="h5">
         Hi there!
       </Typography>
-      {submit.errorItems && submit.errorItems.length > 0 && (
-         <Typography variant="body1" color="error">
-           {`Please fix ${submit.errorItems && submit.errorItems.length} form
-           field error(s)`}
-         </Typography>
-       )}
       <TextField
         id="email"
         type="email"
@@ -91,13 +97,14 @@ export default function UserAuthForm(props) {
         type="button" 
         variant="outlined" 
         className={classes.button}>
-        Register
+        Create account
       </Button>
       <Button 
         color="secondary" 
         type="submit" 
         variant="contained" 
-        className={classes.button}>
+        className={classes.button}
+        {...login.props}>
         Login
       </Button>
     </form>

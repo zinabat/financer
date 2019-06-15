@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export function useInput(name, defaultValue, validate) {
+export function useInput(name, defaultValue, validate, props) {
     const [value, setValue] = useState(defaultValue);
     const [error, setError] = useState(null);
 
@@ -25,7 +25,8 @@ export function useInput(name, defaultValue, validate) {
             value,
             onChange: handleChange,
             onBlur: handleBlur,
-            error
+            error,
+            ...props
         },
         validate: handleValidate
     };
@@ -52,7 +53,7 @@ export function useSubmit(inputs, success) {
 
     return {
         props: {
-            onSubmit: handleSubmit
+            onClick: handleSubmit
         },
         errorItems
     };
