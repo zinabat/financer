@@ -4,7 +4,7 @@ import {
   TextField,
   Button,
   Paper,
-  Box
+  Collapse
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useInput, useSubmit } from '../hooks/form';
@@ -31,41 +31,56 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(3, 2, 2, 0),
-  },
+  }
 }));
-
-function LoginForm(props) {
-
-}
-
-function RegisterForm(props) {
-  
-}
 
 export default function UserAuthForm(props) {
 
   const classes = useStyles();
-
+  const min = 8;
+  const max = 64;
   const [data, setData] = useState(null);
+  const [registerMode, setRegisterMode] = useState(false);
 
   const email = useInput("Email", "", function(value) {
     return isEmail(value);
   });
 
-  const min = 8;
-  const max = 64;
   const password = useInput("Password", "", function(value) {
-    
     return isLength(value, { min: min, max: max });
   }, {helperText: "Must be between "+min+" and "+max+" characters"});
 
+  const pass_confirm = useInput("Pass_confirm", "", function(value) {
+    return equals(value, password.props.value);
+  }, {helperText: "Passwords must match"});
+
   function handleLogin(data) {
+    alert('login');
     setData(data);
     // send to server
     // get server response
   }
 
+  function handleRegister(data) {
+    alert('register');
+    setData(data);
+  }
+
   const login = useSubmit([email, password], handleLogin);
+  const register = useSubmit([email, password, pass_confirm], handleRegister);
+
+  function switchMode(e) {
+    e.preventDefault();
+    if (registerMode) {
+      setRegisterMode(false);
+    } else {
+      setRegisterMode(true);
+    }
+  }
+
+  // let registerProps = (registerMode ? ...{
+  //   onClick: switchMode
+  // })
 
   return (
     <Paper className={classes.paper}>
@@ -93,18 +108,33 @@ export default function UserAuthForm(props) {
         required
         {...password.props}
       />
+      <Collapse in={registerMode}>
+      <TextField
+        id="pass_confirm"
+        type="password"
+        label="Confirm"
+        variant="filled"
+        margin="normal"
+        fullWidth 
+        required
+        {...pass_confirm.props}
+      />
+      </Collapse>
       <Button 
+        color="primary"
         type="button" 
-        variant="outlined" 
-        className={classes.button}>
-        Create account
+        variant={registerMode ? 'contained' : 'outlined'}
+        className={classes.button}
+        {...(registerMode ? register.props : {onClick: switchMode})}
+        >
+        Create Account
       </Button>
       <Button 
         color="secondary" 
         type="submit" 
-        variant="contained" 
+        variant={registerMode ? 'outlined' : 'contained'}
         className={classes.button}
-        {...login.props}>
+        {...(!registerMode ? login.props : {onClick: switchMode})}>
         Login
       </Button>
     </form>
