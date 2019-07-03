@@ -12,13 +12,17 @@ class App extends Component {
       <Router>
         <NavBar mb={0.5}/>
         <Container maxWidth="sm">
-        
-          <UserAuthForm />
-        
+          <Route path="/login" component={Login} />
         </Container>
       </Router>
     );
   }
+}
+
+function Login() {
+  return (
+    <UserAuthForm />
+  );
 }
 
 export default App;
